@@ -1,7 +1,11 @@
 import { FaWhatsapp } from 'react-icons/fa';
 import SignInButton from './components/SignInButton';
+import { redirect } from 'next/navigation';
+import { auth } from '@/auth';
 
 export default async function Home() {
+  if(await auth()) redirect('/chat');
+  
   return (
     <div className="flex flex-col items-center justify-center bg-slate-200 w-full h-full">
       <div className="flex text-2xl items-center -mt-40 gap-1 mb-3">

@@ -6,4 +6,10 @@ export const {
   auth,
 } = NextAuth({
   providers: [Google],
+  callbacks: {
+    authorized({auth, request: {nextUrl}}) {
+      if(auth) return true;
+      return Response.redirect(new URL('/', nextUrl))
+    }
+  }
 });
