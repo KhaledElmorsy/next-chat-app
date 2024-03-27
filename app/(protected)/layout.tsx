@@ -1,6 +1,6 @@
 import { auth } from '@/auth';
-import SideBarButton from './chat/components/SideBarButton';
-import NavLinks from './chat/components/NavLinks';
+import SideBarButton from './components/SideBarButton';
+import NavLinks from './components/NavLinks';
 import { PiSignOut } from 'react-icons/pi';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
@@ -26,7 +26,7 @@ export default async function Layout({
             height={28}
             className="rounded-full"
           />
-          <SideBarButton href="/api/auth/signout">
+          <SideBarButton href="/api/auth/signout" ariaLabel='sign out'>
             <PiSignOut title="sign out" />
           </SideBarButton>
         </div>

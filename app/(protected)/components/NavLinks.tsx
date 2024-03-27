@@ -16,7 +16,12 @@ export default function NavLinks() {
   const pathname = usePathname();
 
   return links.map(({ Icon, href, name }) => (
-    <SideBarButton href={href} active={pathname.startsWith(href)} key={href}>
+    <SideBarButton
+      ariaLabel={name}
+      href={href}
+      active={pathname.startsWith(href)}
+      key={href}
+    >
       <Icon className="text-2xl grid text-gray-700" title={name} />
     </SideBarButton>
   ));
