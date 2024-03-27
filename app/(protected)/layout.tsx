@@ -3,6 +3,7 @@ import SideBarButton from './chat/components/SideBarButton';
 import NavLinks from './chat/components/NavLinks';
 import { PiSignOut } from 'react-icons/pi';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
 
 export default async function Layout({
   children,
@@ -10,7 +11,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-
+  if (!session) redirect('/');
   return (
     <div className="flex h-full">
       <div className="flex flex-col items-center justify-between bg-slate-50 w-11 py-2 px-1">
