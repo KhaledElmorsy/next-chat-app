@@ -48,21 +48,29 @@ CREATE TABLE users
 
 CREATE TABLE conversations
 (
-  id TEXT PRIMARY KEY
+  id TEXT PRIMARY KEY,
+  name TEXT,
+  group_chat BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE memberships
 (
-  user_id INT REFERENCES users ON DELETE CASCADE,
-  conversation_id TEXT REFERENCES conversations ON DELETE CASCADE,
+  user_id INT NOT NULL REFERENCES users ON DELETE CASCADE,
+  conversation_id TEXT NOT NULL REFERENCES conversations ON DELETE CASCADE,
   PRIMARY KEY (user_id, conversation_id)
 );
 
 CREATE TABLE messages
 (
   id TEXT PRIMARY KEY,
-  body TEXT,
+  body TEXT NOT NULL,
   user_id INT REFERENCES users ON DELETE CASCADE,
   conversation_id TEXT REFERENCES conversations ON DELETE CASCADE,
-  createdAt TIMESTAMPTZ DEFAULT now()
+  createdAt TIMESTAMPTZ  NOT NULL DEFAULT now()
 );
+
+create TABLE seen_messages (
+  message_id TEXT REFERENCES messages ON DELETE CASCADE,
+  user_id INT REFERENCES users ON DELETE CASCADE,
+  PRIMARY KEY(message_id, user_id)
+)
