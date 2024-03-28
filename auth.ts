@@ -9,4 +9,9 @@ export const {
 } = NextAuth({
   adapter: PostgresAdapter(pool),
   providers: [Google],
+  callbacks: {
+    session({ session, user }) {
+      return { ...session, id: user.id };
+    },
+  },
 });

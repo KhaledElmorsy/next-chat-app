@@ -13,6 +13,14 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      keyframes: {
+        'fly-top': {
+          '0%': {transform: 'translateY(-100%)'}
+        }
+      },
+      animation: {
+        'fly-top': 'fly-top 1s cubic-bezier(.12,.94,0,1.02)'
+      }
     },
   },
   plugins: [],
