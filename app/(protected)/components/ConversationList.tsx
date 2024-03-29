@@ -1,9 +1,10 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { IoIosMailUnread } from 'react-icons/io';
+import clsx from 'clsx';
 
 function isToday(date: Date) {
   return date.toLocaleDateString() === new Date().toLocaleDateString();
@@ -27,6 +28,7 @@ export default function ConversationList({
 }: ConversationListProps) {
   const searchParams = useSearchParams();
   const query = searchParams.get('query');
+  const pathname = usePathname();
 
   const conversationElements = conversations
     .filter((c) => !query || c.name.toLowerCase().includes(query.toLowerCase()))
@@ -36,7 +38,10 @@ export default function ConversationList({
         <Link
           key={conversationId}
           href={`/chat/${conversationId}`}
-          className="flex gap-2 hover:bg-gray-100 w-full px-4 py-4 items-center rounded-md"
+          className={clsx(
+            'flex gap-2 hover:bg-gray-100 w-full px-4 py-4 items-center rounded-md',
+            pathname.endsWith(conversationId) && 'bg-gray-100'
+          )}
         >
           <Image
             width={32}
