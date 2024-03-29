@@ -1,10 +1,11 @@
 import { auth } from '@/auth';
-import SideBarButton from './components/SideBarButton';
-import NavLinks from './components/NavLinks';
-import NewConvo from './components/NewConvo';
-import { PiSignOut } from 'react-icons/pi';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
+import { PiSignOut } from 'react-icons/pi';
+import Conversations from './components/Conversations';
+import NavLinks from './components/NavLinks';
+import NewConvo from './components/NewConvo';
+import SideBarButton from './components/SideBarButton';
 
 export default async function Layout({
   children,
@@ -32,12 +33,14 @@ export default async function Layout({
           </SideBarButton>
         </div>
       </div>
-      <div className="w-full h-full ring-1 ring-gray-200 rounded-md md:w-80">
+      <div className="w-full h-full ring-1 ring-gray-200 rounded-md md:w-96">
         <div className="px-4 py-4 flex justify-between items-center ">
           <h1 className="text-2xl font-semibold">Chats</h1>
           <NewConvo />
         </div>
+        <Conversations />
       </div>
+      {children}
     </div>
   );
 }

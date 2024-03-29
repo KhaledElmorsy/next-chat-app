@@ -4,6 +4,6 @@ declare module 'next-auth' {
   interface Session {
     user: {
       id: number;
-    } & Omit<DefaultSession['user'], 'id'>;
+    } & Omit<NonNullable<DefaultSession['user']>, 'id'>;
   }
 }

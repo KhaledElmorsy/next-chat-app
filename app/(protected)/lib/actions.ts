@@ -3,6 +3,7 @@
 import { nanoid } from 'nanoid';
 import * as db from '@/app/lib/db';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 export async function createDirectConversation(
   userIds: number[],
@@ -38,4 +39,5 @@ export async function createDirectConversation(
   } catch (err) {
     console.error("Couldn't create conversation", err);
   }
+  revalidatePath('/chat')
 }

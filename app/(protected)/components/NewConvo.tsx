@@ -4,6 +4,7 @@ import { LuPenSquare } from 'react-icons/lu';
 import UserList from './UserList';
 import { useOnClickOutside } from 'usehooks-ts';
 import { ISearchUserResult } from '@/app/lib/db/';
+import Input from './Input';
 
 export default function NewConvo() {
   const [showDialog, setShowDialogue] = useState(false);
@@ -12,7 +13,7 @@ export default function NewConvo() {
   const dialogContainer = useRef(null);
 
   useEffect(() => {
-    if(!showDialog) return;
+    if (!showDialog) return;
     fetch(`/api/users?query=${search}`)
       .then((res) => res.json())
       .then((body) => setUsers(body))
@@ -34,16 +35,15 @@ export default function NewConvo() {
       {showDialog && (
         <div
           ref={dialogContainer}
-          className="flex flex-col p-6 gap-3 absolute top-[100%] right-0 overflow-y-auto animate-fly-top w-72 h-96 bg-gray-50 backdrop:blur rounded-md shadow-md"
+          className="flex flex-col p-6 gap-3 absolute top-[100%] right-0 overflow-y-auto animate-fly-top w-64 h-96 bg-gray-50 backdrop:blur rounded-md shadow-md"
         >
           <h1 className="text-xl font-semibold">New Chat</h1>
-          <input
+          <Input
             placeholder="Search name or email"
-            className="text-xs px-4 py-1.5 focus-visible:outline-none shadow-md focus-visible:border-b-2 focus-visible:border-green-700 rounded-md"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <UserList users={users} onPick={() => setShowDialogue(false)}/>
+          <UserList users={users} onPick={() => setShowDialogue(false)} />
         </div>
       )}
     </div>
