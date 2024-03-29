@@ -122,6 +122,37 @@ const getConversationMessagesIR: any = {"usedParamSet":{"userId":true,"conversat
 export const getConversationMessages = new PreparedQuery<IGetConversationMessagesParams,IGetConversationMessagesResult>(getConversationMessagesIR);
 
 
+/** 'GetCovnersationData' parameters type */
+export interface IGetCovnersationDataParams {
+  conversationId?: string | null | void;
+}
+
+/** 'GetCovnersationData' return type */
+export interface IGetCovnersationDataResult {
+  groupChat: boolean | null;
+  name: string | null;
+}
+
+/** 'GetCovnersationData' query type */
+export interface IGetCovnersationDataQuery {
+  params: IGetCovnersationDataParams;
+  result: IGetCovnersationDataResult;
+}
+
+const getCovnersationDataIR: any = {"usedParamSet":{"conversationId":true},"params":[{"name":"conversationId","required":false,"transform":{"type":"scalar"},"locs":[{"a":71,"b":85}]}],"statement":"SELECT name,\n  group_chat as \"groupChat\"\nFROM conversations\nWHERE id = :conversationId"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT name,
+ *   group_chat as "groupChat"
+ * FROM conversations
+ * WHERE id = :conversationId
+ * ```
+ */
+export const getCovnersationData = new PreparedQuery<IGetCovnersationDataParams,IGetCovnersationDataResult>(getCovnersationDataIR);
+
+
 /** 'GetLastConversationMessages' parameters type */
 export interface IGetLastConversationMessagesParams {
   userId?: number | null | void;

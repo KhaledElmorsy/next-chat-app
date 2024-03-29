@@ -5,11 +5,11 @@ const testData = {
     { id: 3, name: 'Foo', email: 'foo@mail.com', image: 'rand.com' },
   ],
   conversations: [
-    { id: 'khaledSteve', group_chat: false },
-    { id: 'khaledFoo', group_chat: false },
-    { id: 'groupChat', group_chat: true },
-    { id: 'khaledFooGroup', group_chat: true },
-    { id: 'khaledSolo', group_chat: false },
+    { id: 'khaledSteve', group_chat: false, name: null },
+    { id: 'khaledFoo', group_chat: false, name: null },
+    { id: 'groupChat', group_chat: true, name: 'the crew' },
+    { id: 'khaledFooGroup', group_chat: true, name: 'Khaled & Foo' },
+    { id: 'khaledSolo', group_chat: false, name: null },
   ],
   memberships: [
     { user_id: 1, conversation_id: 'khaledSteve' },

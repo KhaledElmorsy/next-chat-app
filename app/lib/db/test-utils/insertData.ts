@@ -9,6 +9,8 @@ function stringify(d: unknown) {
       return `${d}`;
     case 'boolean':
       return `${d}`;
+    default: 
+     if(d === null) return 'null' 
   }
 }
 

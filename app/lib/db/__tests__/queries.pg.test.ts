@@ -92,6 +92,19 @@ describe('getConversationMessages', () => {
   });
 });
 
+describe('getConversationData', () => {
+  it('Returns the conversation name and group chat prop', async () => {
+    const conversation = testData.conversations[2];
+    const { id } = conversation;
+    const [dbConversation] = await db.getCovnersationData.run(
+      { conversationId: id },
+      client
+    );
+    expect(dbConversation.name).toBe(conversation.name);
+    expect(dbConversation.groupChat).toBe(conversation.group_chat);
+  });
+});
+
 describe('getLastConversationMessages', () => {
   it('Returns the last message for each conversation the passed user is in and whether they saw it', async () => {
     const user = testData.users[0];
