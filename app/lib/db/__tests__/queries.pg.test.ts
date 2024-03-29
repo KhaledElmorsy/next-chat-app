@@ -72,6 +72,7 @@ describe('getConversationMessages', () => {
         {
           "body": "heyo",
           "createdAt": 2024-01-01T00:00:00.000Z,
+          "id": "4",
           "image": "rand.com",
           "name": "Khaled",
           "seen": true,
@@ -80,6 +81,7 @@ describe('getConversationMessages', () => {
         {
           "body": "hey there",
           "createdAt": 2024-03-01T00:00:00.000Z,
+          "id": "5",
           "image": "rand.com",
           "name": "Steve",
           "seen": false,

@@ -84,6 +84,7 @@ export interface IGetConversationMessagesParams {
 export interface IGetConversationMessagesResult {
   body: string;
   createdAt: Date;
+  id: string;
   image: string | null;
   name: string | null;
   seen: boolean | null;
@@ -96,12 +97,13 @@ export interface IGetConversationMessagesQuery {
   result: IGetConversationMessagesResult;
 }
 
-const getConversationMessagesIR: any = {"usedParamSet":{"userId":true,"conversationId":true},"params":[{"name":"userId","required":false,"transform":{"type":"scalar"},"locs":[{"a":183,"b":189}]},{"name":"conversationId","required":false,"transform":{"type":"scalar"},"locs":[{"a":284,"b":298}]}],"statement":"SELECT body,\n  createdAt as \"createdAt\",\n  u.name,\n  u.image,\n  u.id as \"userId\",\n  (\n    SELECT count(*)\n    FROM seen_messages s\n    WHERE s.message_id = m.id\n      AND s.user_id = :userId\n  ) = 1 as \"seen\"\nFROM messages m\n  JOIN users u ON m.user_id = u.id\nWHERE conversation_id = :conversationId"};
+const getConversationMessagesIR: any = {"usedParamSet":{"userId":true,"conversationId":true},"params":[{"name":"userId","required":false,"transform":{"type":"scalar"},"locs":[{"a":191,"b":197}]},{"name":"conversationId","required":false,"transform":{"type":"scalar"},"locs":[{"a":292,"b":306}]}],"statement":"SELECT m.id,\n  body,\n  createdAt as \"createdAt\",\n  u.name,\n  u.image,\n  u.id as \"userId\",\n  (\n    SELECT count(*)\n    FROM seen_messages s\n    WHERE s.message_id = m.id\n      AND s.user_id = :userId\n  ) = 1 as \"seen\"\nFROM messages m\n  JOIN users u ON m.user_id = u.id\nWHERE conversation_id = :conversationId"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT body,
+ * SELECT m.id,
+ *   body,
  *   createdAt as "createdAt",
  *   u.name,
  *   u.image,
@@ -191,7 +193,7 @@ export interface IGetUserConversationsQuery {
   result: IGetUserConversationsResult;
 }
 
-const getUserConversationsIR: any = {"usedParamSet":{"userId":true},"params":[{"name":"userId","required":false,"transform":{"type":"scalar"},"locs":[{"a":164,"b":170}]}],"statement":"SELECT conversation_id as \"conversationId\",\n  name,\n  group_chat as \"groupChat\"\nFROM memberships m\nJOIN conversations c ON c.id = m.conversation_id\nWHERE user_id = :userId"};
+const getUserConversationsIR: any = {"usedParamSet":{"userId":true},"params":[{"name":"userId","required":false,"transform":{"type":"scalar"},"locs":[{"a":166,"b":172}]}],"statement":"SELECT conversation_id as \"conversationId\",\n  name,\n  group_chat as \"groupChat\"\nFROM memberships m\n  JOIN conversations c ON c.id = m.conversation_id\nWHERE user_id = :userId"};
 
 /**
  * Query generated from SQL:
@@ -200,7 +202,7 @@ const getUserConversationsIR: any = {"usedParamSet":{"userId":true},"params":[{"
  *   name,
  *   group_chat as "groupChat"
  * FROM memberships m
- * JOIN conversations c ON c.id = m.conversation_id
+ *   JOIN conversations c ON c.id = m.conversation_id
  * WHERE user_id = :userId
  * ```
  */
@@ -259,7 +261,7 @@ export interface IGetDirectConversationQuery {
   result: IGetDirectConversationResult;
 }
 
-const getDirectConversationIR: any = {"usedParamSet":{"userIds":true},"params":[{"name":"userIds","required":false,"transform":{"type":"scalar"},"locs":[{"a":125,"b":132}]}],"statement":"SELECT id as \"conversationId\"\nFROM conversations c\nWHERE 2 = (\n  SELECT count(*) \n  FROM memberships m\n  WHERE user_id = ANY(:userIds)\n    AND m.conversation_id = c.id\n) AND group_chat = false"};
+const getDirectConversationIR: any = {"usedParamSet":{"userIds":true},"params":[{"name":"userIds","required":false,"transform":{"type":"scalar"},"locs":[{"a":130,"b":137}]}],"statement":"SELECT id as \"conversationId\"\nFROM conversations c\nWHERE 2 = (\n    SELECT count(*)\n    FROM memberships m\n    WHERE user_id = ANY(:userIds)\n      AND m.conversation_id = c.id\n  )\n  AND group_chat = false"};
 
 /**
  * Query generated from SQL:
@@ -267,11 +269,12 @@ const getDirectConversationIR: any = {"usedParamSet":{"userIds":true},"params":[
  * SELECT id as "conversationId"
  * FROM conversations c
  * WHERE 2 = (
- *   SELECT count(*) 
- *   FROM memberships m
- *   WHERE user_id = ANY(:userIds)
- *     AND m.conversation_id = c.id
- * ) AND group_chat = false
+ *     SELECT count(*)
+ *     FROM memberships m
+ *     WHERE user_id = ANY(:userIds)
+ *       AND m.conversation_id = c.id
+ *   )
+ *   AND group_chat = false
  * ```
  */
 export const getDirectConversation = new PreparedQuery<IGetDirectConversationParams,IGetDirectConversationResult>(getDirectConversationIR);
@@ -293,7 +296,7 @@ export interface IGetSoloConversationQuery {
   result: IGetSoloConversationResult;
 }
 
-const getSoloConversationIR: any = {"usedParamSet":{"userId":true},"params":[{"name":"userId","required":false,"transform":{"type":"scalar"},"locs":[{"a":84,"b":90}]}],"statement":"WITH user_convos AS (\n  SELECT conversation_id\n  FROM memberships\n  WHERE user_id = :userId\n) \nSELECT id as \"conversationId\"\nFROM conversations c\nWHERE 1 = (\n  SELECT count(*) \n  FROM memberships m\n  WHERE m.conversation_id = c.id\n    AND m.conversation_id = ANY (SELECT conversation_id FROM user_convos)\n) AND group_chat = false"};
+const getSoloConversationIR: any = {"usedParamSet":{"userId":true},"params":[{"name":"userId","required":false,"transform":{"type":"scalar"},"locs":[{"a":84,"b":90}]}],"statement":"WITH user_convos AS (\n  SELECT conversation_id\n  FROM memberships\n  WHERE user_id = :userId\n)\nSELECT id as \"conversationId\"\nFROM conversations c\nWHERE 1 = (\n    SELECT count(*)\n    FROM memberships m\n    WHERE m.conversation_id = c.id\n      AND m.conversation_id = ANY (\n        SELECT conversation_id\n        FROM user_convos\n      )\n  )\n  AND group_chat = false"};
 
 /**
  * Query generated from SQL:
@@ -302,15 +305,19 @@ const getSoloConversationIR: any = {"usedParamSet":{"userId":true},"params":[{"n
  *   SELECT conversation_id
  *   FROM memberships
  *   WHERE user_id = :userId
- * ) 
+ * )
  * SELECT id as "conversationId"
  * FROM conversations c
  * WHERE 1 = (
- *   SELECT count(*) 
- *   FROM memberships m
- *   WHERE m.conversation_id = c.id
- *     AND m.conversation_id = ANY (SELECT conversation_id FROM user_convos)
- * ) AND group_chat = false
+ *     SELECT count(*)
+ *     FROM memberships m
+ *     WHERE m.conversation_id = c.id
+ *       AND m.conversation_id = ANY (
+ *         SELECT conversation_id
+ *         FROM user_convos
+ *       )
+ *   )
+ *   AND group_chat = false
  * ```
  */
 export const getSoloConversation = new PreparedQuery<IGetSoloConversationParams,IGetSoloConversationResult>(getSoloConversationIR);
