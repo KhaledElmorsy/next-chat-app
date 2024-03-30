@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid';
 import * as db from '@/app/lib/db';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { pusherServer } from './pusher/server';
 
 export async function createDirectConversation(userIds: number[]) {
   if (userIds.length > 2) return;
@@ -54,7 +55,7 @@ export async function createMessage({
   conversationId,
   userId,
 }: MessageData) {
-  if(!body) return;
+  if (!body) return;
   const messageId = nanoid();
   try {
     await db.createMessage.run(
@@ -69,7 +70,7 @@ export async function createMessage({
   } catch (err) {
     console.error('Could not create message', err);
   }
-  revalidatePath('/chat');
+  pusherServer.trigger(conversationId, 'new-message', {});
   return messageId;
 }
 
@@ -79,5 +80,9 @@ export async function setMessageSeen(messageId: string, userId: number) {
   } catch (err) {
     console.error('Cant set message as seen', err);
   }
-  revalidatePath('/chat')
+  revalidatePath('/chat');
+}
+
+export async function revalidate() {
+  revalidatePath('/chat');
 }

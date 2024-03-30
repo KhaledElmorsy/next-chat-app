@@ -1,6 +1,9 @@
+'use client';
+
 import { setMessageSeen } from '@/app/(protected)/lib/actions';
 import { IGetConversationMessagesResult } from '@/app/lib/db';
 import clsx from 'clsx';
+import { useEffect } from 'react';
 
 interface MessageProps extends IGetConversationMessagesResult {
   currentUserId: number;
@@ -9,9 +12,12 @@ interface MessageProps extends IGetConversationMessagesResult {
 
 export default function Message(m: MessageProps) {
   const isAuthor = m.userId === m.currentUserId;
-  if (!m.seen) {
-    setMessageSeen(m.id, m.currentUserId);
-  }
+  useEffect(() => {
+    if (!m.seen) {
+      setMessageSeen(m.id, m.currentUserId);
+    }
+  }, []);
+  
   return (
     <div
       className={clsx(
