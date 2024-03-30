@@ -52,7 +52,9 @@ export default function ConversationList({
           />
           <div className="flex flex-col w-full">
             <div className="flex justify-between items-center">
-              <p className="text-sm">{name}</p>
+              <p className="text-sm overflow-ellipsis line-clamp-1 w-3/5">
+                {name}
+              </p>
               {lastMessage && (
                 <p className="text-xs text-gray-400">
                   {isToday(lastMessageDate!)

@@ -5,9 +5,7 @@ import * as db from '@/app/lib/db';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 
-export async function createDirectConversation(
-  userIds: number[],
-) {
+export async function createDirectConversation(userIds: number[]) {
   if (userIds.length > 2) return;
   let existingConvId: string;
   if (userIds.length === 1) {
@@ -30,7 +28,10 @@ export async function createDirectConversation(
 
   const conversationId = nanoid();
   try {
-    await db.createConversation.run({ conversationId, groupChat: false }, db.pool);
+    await db.createConversation.run(
+      { conversationId, groupChat: false },
+      db.pool
+    );
     await Promise.all(
       userIds.map((id) =>
         db.addConversationMember.run({ conversationId, userId: id }, db.pool)
@@ -38,6 +39,45 @@ export async function createDirectConversation(
     );
   } catch (err) {
     console.error("Couldn't create conversation", err);
+  }
+  revalidatePath('/chat');
+}
+
+interface MessageData {
+  body: string;
+  conversationId: string;
+  userId: number;
+}
+
+export async function createMessage({
+  body,
+  conversationId,
+  userId,
+}: MessageData) {
+  if(!body) return;
+  const messageId = nanoid();
+  try {
+    await db.createMessage.run(
+      {
+        body,
+        id: messageId,
+        userId,
+        conversationId: conversationId,
+      },
+      db.pool
+    );
+  } catch (err) {
+    console.error('Could not create message', err);
+  }
+  revalidatePath('/chat');
+  return messageId;
+}
+
+export async function setMessageSeen(messageId: string, userId: number) {
+  try {
+    await db.setMessageSeen.run({ messageId, userId }, db.pool);
+  } catch (err) {
+    console.error('Cant set message as seen', err);
   }
   revalidatePath('/chat')
 }
