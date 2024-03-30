@@ -4,18 +4,21 @@ import {
   getUserConversations,
   pool,
 } from '@/app/lib/db';
-import { auth } from '@/auth';
-import Image from 'next/image';
-import Link from 'next/link';
-import { IoIosMailUnread } from 'react-icons/io';
-import Input from './Input';
-import ConversationSearch from './ConversationSearch';
-import ConversationList from './ConversationList';
+import type { Session } from 'next-auth';
 
-export default async function Conversations() {
-  const session = await auth();
-  const user = session?.user;
-  const userId = user?.id;
+export interface MappedConversationData {
+  conversationId: string;
+  name: string;
+  image: string;
+  lastMessage?: string;
+  seen?: boolean;
+  lastMessageDate?: Date;
+}
+
+export async function getMappedConversationData(
+  user: Session['user']
+): Promise<MappedConversationData[]> {
+  const { id: userId } = user;
   const conversations = await getUserConversations.run({ userId }, pool);
   const lastConversationMessages = await getLastConversationMessages.run(
     { userId },
@@ -35,7 +38,7 @@ export default async function Conversations() {
       let image: string;
       if (conv.groupChat && conv.name) {
         name = conv.name;
-        image = session?.user.image!;
+        image = user.image!;
       } else {
         const otherParty = members.find((m) => m.userId !== userId);
         name = otherParty?.name! ?? `${user?.name} (You)`;
@@ -51,15 +54,5 @@ export default async function Conversations() {
       };
     })
   );
-
-  return (
-    <div className="flex flex-col gap-3 p-4">
-      <div className="flex flex-col gap-3 h-full items-start overflow-y-auto">
-        <div className="p-2 w-full">
-          <ConversationSearch />
-        </div>
-        <ConversationList conversations={mappedConversations} />
-      </div>
-    </div>
-  );
+  return mappedConversations;
 }

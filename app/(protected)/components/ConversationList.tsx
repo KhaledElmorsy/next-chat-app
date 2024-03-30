@@ -5,22 +5,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { IoIosMailUnread } from 'react-icons/io';
 import clsx from 'clsx';
+import { MappedConversationData } from '../lib/util';
 
 function isToday(date: Date) {
   return date.toLocaleDateString() === new Date().toLocaleDateString();
 }
 
-interface ConversationData {
-  conversationId: string;
-  name: string;
-  image: string;
-  lastMessage?: string;
-  seen?: boolean;
-  lastMessageDate?: Date;
-}
-
 interface ConversationListProps {
-  conversations: ConversationData[];
+  conversations: MappedConversationData[];
 }
 
 export default function ConversationList({
