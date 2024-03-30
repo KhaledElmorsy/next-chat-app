@@ -38,7 +38,7 @@ export default async function Conversations() {
         image = session?.user.image!;
       } else {
         const otherParty = members.find((m) => m.userId !== userId);
-        name = otherParty?.name! ?? `${user?.name}(You)`;
+        name = otherParty?.name! ?? `${user?.name} (You)`;
         image = otherParty?.image! ?? user?.image;
       }
       return {
