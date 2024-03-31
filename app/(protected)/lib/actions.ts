@@ -41,7 +41,31 @@ export async function createDirectConversation(userIds: number[]) {
   } catch (err) {
     console.error("Couldn't create conversation", err);
   }
+  userIds.forEach(userId => {
+    pusherServer.trigger(`user-${userId}`,'conversation-mutation', {})
+  })
   revalidatePath('/chat');
+}
+
+export async function createGroupConversation(userIds: number[], name: string) {
+  const conversationId = nanoid();
+  try {
+    await db.createConversation.run(
+      { conversationId, groupChat: true, name },
+      db.pool
+    );
+    await Promise.all(
+      userIds.map(async (userId) => {
+        db.addConversationMember.run({ conversationId, userId }, db.pool);
+      })
+    );
+  } catch (err) {
+    console.error(err);
+  }
+  userIds.forEach(userId => {
+    pusherServer.trigger(`user-${userId}`,'conversation-mutation', {})
+  })
+  revalidatePath('/chat')
 }
 
 interface MessageData {
@@ -70,7 +94,7 @@ export async function createMessage({
   } catch (err) {
     console.error('Could not create message', err);
   }
-  pusherServer.trigger(conversationId, 'new-message', {});
+  pusherServer.trigger(`convo-${conversationId}`, 'new-message', {});
   return messageId;
 }
 

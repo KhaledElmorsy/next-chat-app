@@ -41,6 +41,7 @@ export default async function Layout({
       {children}
       <Revalidator
         conversationIds={mappedConversations.map((c) => c.conversationId)}
+        userId={user.id}
       />
     </div>
   );

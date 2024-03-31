@@ -1,15 +1,18 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { LuPenSquare } from 'react-icons/lu';
+import { RiGroupLine } from 'react-icons/ri';
 import UserList from './UserList';
 import { useOnClickOutside } from 'usehooks-ts';
 import { ISearchUserResult } from '@/app/lib/db/';
 import Input from './Input';
+import NewGroup from './NewGroup';
 
 export default function NewConvo() {
-  const [showDialog, setShowDialogue] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
   const [users, setUsers] = useState<ISearchUserResult[]>([]);
   const [search, setSearch] = useState('');
+  const [showGroupCreator, setShowGroupCreator] = useState(false);
   const dialogContainer = useRef(null);
 
   useEffect(() => {
@@ -21,13 +24,19 @@ export default function NewConvo() {
   }, [search, showDialog]);
 
   useOnClickOutside(dialogContainer, () => {
-    setShowDialogue(false);
+    setShowDialog(false);
+    setShowGroupCreator(false);
   });
+
+  function groupCreated() {
+    setShowDialog(false);
+    setShowGroupCreator(false);
+  }
 
   return (
     <div className="relative">
       <button
-        onClick={() => setShowDialogue(true)}
+        onClick={() => setShowDialog(true)}
         className="grid place-items-center w-16 h-10 hover:bg-gray-100 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
       >
         <LuPenSquare title="Start conversation" />
@@ -43,7 +52,22 @@ export default function NewConvo() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <UserList users={users} onPick={() => setShowDialogue(false)} />
+          <button
+            onClick={() => setShowGroupCreator(true)}
+            className="flex gap-3 items-center px-2 py-3 rounded-md hover:bg-gray-200 "
+          >
+            <div className="size-8 rounded-full shadow-md bg-white flex items-center justify-center">
+              <RiGroupLine className="bg-white text-gray-700 rounded-full shadow-sm" />
+            </div>
+            New Group
+          </button>
+          <UserList users={users} onPick={() => setShowDialog(false)} />
+          {showGroupCreator ? (
+            <NewGroup
+              onBack={() => setShowGroupCreator(false)}
+              onGroupCreated={groupCreated}
+            />
+          ) : null}
         </div>
       )}
     </div>
