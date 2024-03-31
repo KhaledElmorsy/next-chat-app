@@ -24,7 +24,7 @@ export async function createDirectConversation(userIds: number[]) {
   }
 
   if (existingConvId) {
-    return redirect(`chat/${existingConvId}`);
+    return redirect(`/chat/${existingConvId}`);
   }
 
   const conversationId = nanoid();
