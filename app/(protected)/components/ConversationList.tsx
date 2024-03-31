@@ -76,7 +76,7 @@ export default function ConversationList({
     );
 
   return (
-    <div className="flex flex-col overflow-y-auto w-full">
+    <div className="flex flex-col overflow-y-auto w-full h-full p-3">
       {conversationElements}
     </div>
   );
