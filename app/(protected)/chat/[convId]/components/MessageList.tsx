@@ -26,7 +26,7 @@ export default function MessageList({
   return (
     <div
       ref={containerRef}
-      className="flex flex-col gap-2 w-full px-6 py-2 overflow-x-auto h-5/6"
+      className="flex flex-col gap-2 w-full px-6 py-2 overflow-x-auto flex-grow"
     >
       {messages
         .sort((a, b) => (b.createdAt < a.createdAt ? 1 : -1))
