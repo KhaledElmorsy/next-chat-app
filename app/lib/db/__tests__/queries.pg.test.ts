@@ -324,3 +324,15 @@ describe('setMessageSeen', () => {
     expect(dbSeenMessage.rowCount).toBe(1);
   });
 });
+
+describe('deleteUser', () => {
+  it('Deletes a user from the table', async () => {
+    const user = testData.users[0];
+    const userId = user.id;
+    const getUser = async () =>
+      client.query('SELECT * FROM users WHERE id = $1', [userId]);
+    expect((await getUser()).rowCount).toBe(1);
+    await db.deleteUser.run({ userId }, client);
+    expect((await getUser()).rowCount).toBe(0)
+  });
+});

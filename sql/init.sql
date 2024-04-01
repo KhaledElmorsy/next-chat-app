@@ -1,3 +1,14 @@
+CREATE TABLE users
+(
+  id SERIAL,
+  name VARCHAR(255),
+  email VARCHAR(255),
+  "emailVerified" TIMESTAMPTZ,
+  image TEXT,
+
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE verification_token
 (
   identifier TEXT NOT NULL,
@@ -10,7 +21,7 @@ CREATE TABLE verification_token
 CREATE TABLE accounts
 (
   id SERIAL,
-  "userId" INTEGER NOT NULL,
+  "userId" INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
   type VARCHAR(255) NOT NULL,
   provider VARCHAR(255) NOT NULL,
   "providerAccountId" VARCHAR(255) NOT NULL,
@@ -28,20 +39,9 @@ CREATE TABLE accounts
 CREATE TABLE sessions
 (
   id SERIAL,
-  "userId" INTEGER NOT NULL,
+  "userId" INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
   expires TIMESTAMPTZ NOT NULL,
   "sessionToken" VARCHAR(255) NOT NULL,
-
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE users
-(
-  id SERIAL,
-  name VARCHAR(255),
-  email VARCHAR(255),
-  "emailVerified" TIMESTAMPTZ,
-  image TEXT,
 
   PRIMARY KEY (id)
 );

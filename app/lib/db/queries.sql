@@ -137,3 +137,7 @@ WHERE conversation_id = :conversationId
 /* @name setMessageSeen */
 INSERT INTO seen_messages (message_id, user_id)
 VALUES (:messageId, :userId);
+
+/* @name deleteUser */
+DELETE FROM users
+WHERE id = :userId;

@@ -547,3 +547,29 @@ const setMessageSeenIR: any = {"usedParamSet":{"messageId":true,"userId":true},"
 export const setMessageSeen = new PreparedQuery<ISetMessageSeenParams,ISetMessageSeenResult>(setMessageSeenIR);
 
 
+/** 'DeleteUser' parameters type */
+export interface IDeleteUserParams {
+  userId?: number | null | void;
+}
+
+/** 'DeleteUser' return type */
+export type IDeleteUserResult = void;
+
+/** 'DeleteUser' query type */
+export interface IDeleteUserQuery {
+  params: IDeleteUserParams;
+  result: IDeleteUserResult;
+}
+
+const deleteUserIR: any = {"usedParamSet":{"userId":true},"params":[{"name":"userId","required":false,"transform":{"type":"scalar"},"locs":[{"a":29,"b":35}]}],"statement":"DELETE FROM users\nWHERE id = :userId"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM users
+ * WHERE id = :userId
+ * ```
+ */
+export const deleteUser = new PreparedQuery<IDeleteUserParams,IDeleteUserResult>(deleteUserIR);
+
+
