@@ -42,8 +42,8 @@ export default async function Page({
   );
 
   return (
-    <div className="w-full flex flex-col">
-      <div className="flex gap-2 h-10 px-4 py-8 items-center bg-white outline outline-gray-200 shadow-md z-10">
+    <div className="w-full flex flex-col overflow-hidden">
+      <div className="flex gap-2 h-10 px-4 py-8 items-center bg-white outline outline-gray-200 shadow-md z-10 select-none cursor-pointer hover:bg-gray-50">
         <Image
           width={36}
           height={36}
@@ -51,7 +51,14 @@ export default async function Page({
           alt={`${name}'s chat picture`}
           className="rounded-full"
         />
-        <p className="text-sm font-semibold">{name}</p>
+        <div className="flex flex-col min-w-0">
+          <p className="text-sm font-semibold">{name}</p>
+          {isGroupChat && (
+            <p className="w-full text-xs text-gray-500 overflow-ellipsis overflow-hidden whitespace-nowrap">
+              {convMembers.map((m) => m.name).join(', ')}
+            </p>
+          )}
+        </div>
       </div>
       <MessageList
         messages={messages}
