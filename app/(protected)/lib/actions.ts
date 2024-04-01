@@ -41,9 +41,9 @@ export async function createDirectConversation(userIds: number[]) {
   } catch (err) {
     console.error("Couldn't create conversation", err);
   }
-  userIds.forEach(userId => {
-    pusherServer.trigger(`user-${userId}`,'conversation-mutation', {})
-  })
+  userIds.forEach((userId) => {
+    pusherServer.trigger(`user-${userId}`, 'conversation-mutation', {});
+  });
   revalidatePath('/chat');
 }
 
@@ -62,10 +62,10 @@ export async function createGroupConversation(userIds: number[], name: string) {
   } catch (err) {
     console.error(err);
   }
-  userIds.forEach(userId => {
-    pusherServer.trigger(`user-${userId}`,'conversation-mutation', {})
-  })
-  revalidatePath('/chat')
+  userIds.forEach((userId) => {
+    pusherServer.trigger(`user-${userId}`, 'conversation-mutation', {});
+  });
+  revalidatePath('/chat');
 }
 
 interface MessageData {
@@ -98,6 +98,20 @@ export async function createMessage({
   return messageId;
 }
 
+export async function changeConversationName(id: string, name: string) {
+  try {
+    await db.changeConversationName.run({ conversationId: id, name }, db.pool);
+  } catch (err) {
+    console.error("Couldn't change conversationName", err);
+  }
+  pusherServer.trigger(`convo-${id}`, 'new-message', {});
+  revalidatePath('/chat');
+}
+
+export async function searchUsers(term: string) {
+  return db.searchUser.run({ term }, db.pool);
+}
+
 export async function setMessageSeen(messageId: string, userId: number) {
   try {
     await db.setMessageSeen.run({ messageId, userId }, db.pool);
@@ -105,6 +119,39 @@ export async function setMessageSeen(messageId: string, userId: number) {
     console.error('Cant set message as seen', err);
   }
   revalidatePath('/chat');
+}
+
+export async function removeUserFromConvo(
+  conversationId: string,
+  userId: number
+) {
+  try {
+    const members = await db.getConversationMembers.run(
+      { conversationId },
+      db.pool
+    );
+    await db.removeConversationMember.run({ conversationId, userId }, db.pool);
+    members.forEach((m) =>
+      pusherServer.trigger(`user-${m.userId}`, 'conversation-mutation', {})
+    );
+  } catch (err) {
+    console.error("Couldn't remove conversation member", err);
+  }
+}
+
+export async function deleteConversation(conversationId: string) {
+  try {
+    const members = await db.getConversationMembers.run(
+      { conversationId },
+      db.pool
+    );
+    await db.deleteConversation.run({ conversationId }, db.pool);
+    members.forEach((m) =>
+      pusherServer.trigger(`user-${m.userId}`, 'conversation-mutation', {})
+    );
+  } catch (err) {
+    console.error("Couldn't delete the conversation", err);
+  }
 }
 
 export async function revalidate() {

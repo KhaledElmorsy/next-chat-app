@@ -8,6 +8,9 @@ import { auth } from '@/auth';
 import MessageField from './components/MessageField';
 import Image from 'next/image';
 import MessageList from './components/MessageList';
+import Header from './components/Header';
+import ConversationProvider from './providers/ConversationProvider';
+import { redirect } from 'next/navigation';
 
 export default async function Page({
   params: { convId },
@@ -16,8 +19,17 @@ export default async function Page({
 }) {
   const session = await auth();
   const userId = session?.user.id;
-  const [{ groupChat: isGroupChat, name: convName }] =
-    await getCovnersationData.run({ conversationId: convId }, pool);
+  const convData = await getCovnersationData.run(
+    { conversationId: convId },
+    pool
+  );
+
+  if(!convData.length) {
+    redirect('/chat')
+  }
+
+  const [{ groupChat: isGroupChat, name: convName }] = convData;
+
   const convMembers = await getConversationMembers.run(
     { conversationId: convId },
     pool
@@ -42,30 +54,25 @@ export default async function Page({
   );
 
   return (
-    <div className="w-full flex flex-col overflow-hidden">
-      <div className="flex gap-2 h-10 px-4 py-8 items-center bg-white outline outline-gray-200 shadow-md z-10 select-none cursor-pointer hover:bg-gray-50">
-        <Image
-          width={36}
-          height={36}
-          src={image!}
-          alt={`${name}'s chat picture`}
-          className="rounded-full"
+    <ConversationProvider
+      {...{
+        image: image!,
+        members: convMembers,
+        name: name!,
+        userId: userId!,
+        isGroupChat: isGroupChat!,
+        conversationId: convId,
+      }}
+    >
+      <div className="w-full flex flex-col overflow-hidden relative">
+        <Header />
+        <MessageList
+          messages={messages}
+          isGroupChat={isGroupChat!}
+          currentUserId={userId!}
         />
-        <div className="flex flex-col min-w-0">
-          <p className="text-sm font-semibold">{name}</p>
-          {isGroupChat && (
-            <p className="w-full text-xs text-gray-500 overflow-ellipsis overflow-hidden whitespace-nowrap">
-              {convMembers.map((m) => m.name).join(', ')}
-            </p>
-          )}
-        </div>
+        <MessageField conversationId={convId} userId={userId!} />
       </div>
-      <MessageList
-        messages={messages}
-        isGroupChat={isGroupChat!}
-        currentUserId={userId!}
-      />
-      <MessageField conversationId={convId} userId={userId!} />
-    </div>
+    </ConversationProvider>
   );
 }

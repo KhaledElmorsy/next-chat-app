@@ -15,11 +15,15 @@ const config: Config = {
       },
       keyframes: {
         'fly-top': {
-          '0%': {transform: 'translateY(-100%)'}
+          '0%': {translate: '0% -100%'}
+        },
+        'grow-h': {
+          '0%': {scale: '100% 0%'}
         }
       },
       animation: {
-        'fly-top': 'fly-top 1s cubic-bezier(.12,.94,0,1.02)'
+        'fly-top': 'fly-top 1s cubic-bezier(.12,.94,0,1.02)',
+        'grow-h': 'grow-h 0.7s cubic-bezier(.12,.94,0,1.02)'
       }
     },
   },
