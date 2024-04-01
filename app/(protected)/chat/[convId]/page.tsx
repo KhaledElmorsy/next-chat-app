@@ -24,8 +24,8 @@ export default async function Page({
     pool
   );
 
-  if(!convData.length) {
-    redirect('/chat')
+  if (!convData.length) {
+    redirect('/chat');
   }
 
   const [{ groupChat: isGroupChat, name: convName }] = convData;
@@ -34,6 +34,10 @@ export default async function Page({
     { conversationId: convId },
     pool
   );
+
+  if (!convMembers.find((m) => m.userId === userId)) {
+    redirect('/chat');
+  }
 
   const { name, image } = (() => {
     if (isGroupChat) return { name: convName, image: session?.user.image };

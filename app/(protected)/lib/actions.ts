@@ -134,6 +134,9 @@ export async function removeUserFromConvo(
     members.forEach((m) =>
       pusherServer.trigger(`user-${m.userId}`, 'conversation-mutation', {})
     );
+    if (members.length === 1) {
+      db.deleteConversation.run({ conversationId }, db.pool);
+    }
   } catch (err) {
     console.error("Couldn't remove conversation member", err);
   }

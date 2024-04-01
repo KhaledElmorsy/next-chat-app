@@ -2,6 +2,7 @@ import TabbedWindow from './TabbedWindow';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import { RiGroupLine } from 'react-icons/ri';
 import Overview from './group-settings-pages/Overview';
+import Members from './group-settings-pages/Members';
 
 export default function GroupConvoSettings() {
   return (
@@ -15,7 +16,7 @@ export default function GroupConvoSettings() {
         {
           name: 'Members',
           Icon: RiGroupLine,
-          page: <div>Yo!</div>,
+          page: <Members />,
         },
       ]}
     />
