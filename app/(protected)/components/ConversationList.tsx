@@ -24,7 +24,7 @@ export default function ConversationList({
 
   const conversationElements = conversations
     .filter((c) => !query || c.name.toLowerCase().includes(query.toLowerCase()))
-    .sort((a, b) => (+b?.lastMessageDate! - +a?.lastMessageDate!))
+    .sort((a, b) => +b?.lastMessageDate! - +a?.lastMessageDate!)
     .map(
       ({ conversationId, name, image, lastMessage, seen, lastMessageDate }) => (
         <Link
@@ -42,7 +42,7 @@ export default function ConversationList({
             alt={name}
             className="rounded-full"
           />
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full overflow-hidden">
             <div className="flex justify-between items-center">
               <p className="text-sm overflow-ellipsis line-clamp-1 w-3/5">
                 {name}
@@ -65,7 +65,7 @@ export default function ConversationList({
                     <IoIosMailUnread />
                   </p>
                 )}
-                <p className="overflow-ellipsis text-gray-400 text-xs">
+                <p className="overflow-ellipsis text-gray-400 text-xs whitespace-nowrap overflow-hidden">
                   {lastMessage}{' '}
                 </p>
               </div>
