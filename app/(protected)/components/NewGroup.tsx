@@ -44,6 +44,7 @@ export default function NewGroup({ onBack, onGroupCreated }: NewGroupProps) {
       <MultiUserPickerProvider
         pickedIds={pickedIds}
         setPickedIds={setPickedIds}
+        exclude={[userId!]}
       >
         <MultiUserPicker
           sandwichedElement={
