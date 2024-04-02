@@ -6,7 +6,6 @@ import {
 } from '@/app/lib/db';
 import { auth } from '@/auth';
 import MessageField from './components/MessageField';
-import Image from 'next/image';
 import MessageList from './components/MessageList';
 import Header from './components/Header';
 import ConversationProvider from './providers/ConversationProvider';

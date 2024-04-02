@@ -10,7 +10,6 @@ import {
 import { useRouter } from 'next/navigation';
 import { useConversation } from '../../../providers/ConversationProvider';
 import LightButton from '@/app/(protected)/components/LightButton';
-import clsx from 'clsx';
 
 export default function Overview() {
   const { image, name, conversationId, userId } = useConversation();

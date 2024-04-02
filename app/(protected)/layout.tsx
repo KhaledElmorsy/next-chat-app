@@ -7,7 +7,6 @@ import SideBarButton from './components/SideBarButton';
 import { getMappedConversationData } from './lib/util';
 import ConversationSideBar from './components/ConversationSideBar';
 import Revalidator from './components/Revalidator';
-import { deleteUser } from './lib/actions';
 import DeleteUserButton from './components/DeleteUserButton';
 
 export default async function Layout({

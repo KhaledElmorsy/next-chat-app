@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import { IoMdArrowBack } from 'react-icons/io';
 import Input from './Input';
 import { z } from 'zod';
