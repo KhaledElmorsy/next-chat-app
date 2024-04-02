@@ -24,7 +24,7 @@ export default function ConversationList({
 
   const conversationElements = conversations
     .filter((c) => !query || c.name.toLowerCase().includes(query.toLowerCase()))
-    .sort((a, b) => (b?.lastMessageDate! > a?.lastMessageDate! ? 1 : 0))
+    .sort((a, b) => (+b?.lastMessageDate! - +a?.lastMessageDate!))
     .map(
       ({ conversationId, name, image, lastMessage, seen, lastMessageDate }) => (
         <Link
