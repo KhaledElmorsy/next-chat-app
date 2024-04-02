@@ -9,6 +9,7 @@ import {
 } from '@/app/(protected)/lib/actions';
 import { useRouter } from 'next/navigation';
 import { useConversation } from '../../../providers/ConversationProvider';
+import LightButton from '@/app/(protected)/components/LightButton';
 import clsx from 'clsx';
 
 export default function Overview() {
@@ -33,9 +34,6 @@ export default function Overview() {
     router.replace('/chat');
     await deleteConversation(conversationId);
   }
-
-  const bottomButtonClassname =
-    'w-1/2 bg-white rounded-md shadow-md px-2 py-2 outline-1 outline-gray-300 flex items-center justify-center';
 
   return (
     <div className="flex flex-col items-start gap-3 p-6 h-full">
@@ -70,18 +68,15 @@ export default function Overview() {
         </div>
       )}
       <div className="mt-auto flex justify-evenly gap-2 text-xs w-full">
-        <button
-          onClick={handleRemoveUser}
-          className={clsx(bottomButtonClassname)}
-        >
+        <LightButton onClick={handleRemoveUser} className="w-1/2">
           Exit group
-        </button>
-        <button
+        </LightButton>
+        <LightButton
           onClick={handleDeleteConversation}
-          className={clsx(bottomButtonClassname, 'text-red-800')}
+          className="text-red-800 w-1/2"
         >
           Delete group
-        </button>
+        </LightButton>
       </div>
     </div>
   );

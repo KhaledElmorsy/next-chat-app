@@ -163,6 +163,41 @@ export async function deleteConversation(conversationId: string) {
   }
 }
 
+export async function addUsersToConversation(
+  conversationId: string,
+  userIds: number[]
+) {
+  const [{ groupChat: isGroupChat }] = await db.getCovnersationData.run(
+    { conversationId },
+    db.pool
+  );
+  if (!isGroupChat) {
+    console.error(
+      'Attempting to add member to a direct conversation',
+      `ConvoId: ${conversationId}`
+    );
+  }
+  const members = await db.getConversationMembers.run(
+    { conversationId },
+    db.pool
+  );
+  try {
+    await Promise.all(
+      userIds.map((userId) =>
+        db.addConversationMember.run({ conversationId, userId }, db.pool)
+      )
+    );
+  } catch (err) {
+    console.log("Couldn't add users to conversation", err);
+  }
+  const originalMemberIds = members.map((m) => m.userId);
+  await Promise.all(
+    [...originalMemberIds, userIds].map((id) =>
+      pusherServer.trigger(`user-${id}`, 'conversation-mutation', {})
+    )
+  );
+}
+
 export async function revalidate() {
   revalidatePath('/chat');
 }
