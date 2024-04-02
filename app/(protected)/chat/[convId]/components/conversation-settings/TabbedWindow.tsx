@@ -28,7 +28,7 @@ export default function TabbedWindow({ tabs }: TabbedWindowProps) {
           />
         ))}
       </div>
-      <div className="w-full h-full bg-white rounded-[inherit]">
+      <div className="w-full h-full bg-white rounded-[inherit] min-w-0">
         {tabs[tabIndex].page}
       </div>
     </div>
