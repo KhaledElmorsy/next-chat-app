@@ -7,6 +7,8 @@ import SideBarButton from './components/SideBarButton';
 import { getMappedConversationData } from './lib/util';
 import ConversationSideBar from './components/ConversationSideBar';
 import Revalidator from './components/Revalidator';
+import { deleteUser } from './lib/actions';
+import DeleteUserButton from './components/DeleteUserButton';
 
 export default async function Layout({
   children,
@@ -25,13 +27,16 @@ export default async function Layout({
           <NavLinks />
         </div>
         <div className="flex flex-col gap-2 items-center">
-          <Image
-            src={session?.user?.image as string}
-            alt={`${session?.user?.name}'s profile picture`}
-            width={28}
-            height={28}
-            className="rounded-full"
-          />
+          <div className="group relative flex items-center">
+            <Image
+              src={session?.user?.image as string}
+              alt={`${session?.user?.name}'s profile picture`}
+              width={28}
+              height={28}
+              className="rounded-full"
+            />
+            <DeleteUserButton userId={user.id} />
+          </div>
           <SideBarButton href="/api/auth/signout" ariaLabel="sign out">
             <PiSignOut title="sign out" />
           </SideBarButton>

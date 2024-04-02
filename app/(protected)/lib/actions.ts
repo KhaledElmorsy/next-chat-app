@@ -198,6 +198,27 @@ export async function addUsersToConversation(
   );
 }
 
+export async function deleteUser(userId: number) {
+  const conversations = await db.getUserConversations.run({ userId }, db.pool);
+  const directConversations = conversations.filter((c) => !c.groupChat);
+
+  try {
+    await db.deleteUser.run({ userId }, db.pool);
+    await Promise.all(
+      directConversations.map((c) =>
+        db.deleteConversation.run({ conversationId: c.conversationId }, db.pool)
+      )
+    );
+  } catch (err) {
+    console.log("Couldn't delete user", err);
+  }
+  await Promise.all(
+    conversations.map((c) =>
+      pusherServer.trigger(`convo-${c.conversationId}`, 'new-message', {})
+    )
+  );
+}
+
 export async function revalidate() {
   revalidatePath('/chat');
 }
