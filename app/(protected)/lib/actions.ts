@@ -109,7 +109,13 @@ export async function changeConversationName(id: string, name: string) {
 }
 
 export async function searchUsers(term: string) {
-  return db.searchUser.run({ term }, db.pool);
+  let users;
+  try {
+    users = await db.searchUser.run({ term }, db.pool);
+  } catch (err) {
+    console.error("Couldn't search for users", err);
+  }
+  return users ?? [];
 }
 
 export async function setMessageSeen(messageId: string, userId: number) {
