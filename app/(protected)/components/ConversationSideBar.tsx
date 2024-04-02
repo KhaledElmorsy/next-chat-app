@@ -17,7 +17,7 @@ export default function ConversationSideBar({
   const path = usePathname();
   const isSmallScreen = useMediaQuery('(max-width: 639px)');
   return path !== '/chat' && isSmallScreen ? null : (
-    <div className="flex flex-col w-full h-full bg-white ring-1 ring-gray-200 rounded-md sm:w-96 z-20">
+    <div className="flex flex-col w-full h-full bg-white ring-1 ring-gray-200 rounded-md sm:w-80 sm:flex-shrink-0 z-20">
       <div className="px-4 py-4 flex justify-between items-center ">
         <h1 className="text-2xl font-semibold">Chats</h1>
         <NewConvo />
