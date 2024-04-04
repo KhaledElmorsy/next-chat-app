@@ -2,19 +2,24 @@
 
 import { createMessage, setMessageSeen } from '@/app/(protected)/lib/actions';
 import clsx from 'clsx';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect, useRef } from 'react';
 import { VscSend } from 'react-icons/vsc';
+import { pusherClient } from '@/app/(protected)/lib/pusher/client';
+import { useSendTyping } from '../hooks/typingIndicator';
 
 interface MessageFieldProps {
   conversationId: string;
   userId: number;
+  username: string;
 }
 
 export default function MessageField({
+  username,
   conversationId,
   userId,
 }: MessageFieldProps) {
   const [input, setInput] = useState('');
+  useSendTyping({ input, name: username, conversationId, userId });
 
   async function sendMessage(e: FormEvent) {
     e.preventDefault();

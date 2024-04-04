@@ -74,7 +74,11 @@ export default async function Page({
           isGroupChat={isGroupChat!}
           currentUserId={userId!}
         />
-        <MessageField conversationId={convId} userId={userId!} />
+        <MessageField
+          conversationId={convId}
+          userId={userId!}
+          username={session?.user.name!}
+        />
       </div>
     </ConversationProvider>
   );

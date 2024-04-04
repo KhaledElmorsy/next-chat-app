@@ -6,20 +6,20 @@ import { useOnClickOutside } from 'usehooks-ts';
 import GroupConvoSettings from './conversation-settings/GroupConvoSettings';
 import DirectConvoSettings from './conversation-settings/DirectConvoSettings';
 import { useConversation } from '../providers/ConversationProvider';
+import { useReceiveTyping } from '../hooks/typingIndicator';
 
 export default function Header() {
-  const { name, image, members, isGroupChat, userId } = useConversation();
+  const { name, image, members, isGroupChat, userId, conversationId } =
+    useConversation();
   const [showSettings, setShowSettings] = useState(false);
   const settingsRef = useRef(null);
   useOnClickOutside(settingsRef, (e) => {
     setShowSettings(false);
   });
 
-  const Editor = isGroupChat ? (
-    <GroupConvoSettings />
-  ) : (
-    <DirectConvoSettings />
-  );
+  const Editor = isGroupChat ? <GroupConvoSettings /> : <DirectConvoSettings />;
+
+  const typingUsers = useReceiveTyping(conversationId, userId);
 
   return (
     <div className="w-full h-16 relative">
@@ -39,7 +39,9 @@ export default function Header() {
           <p className="text-sm font-semibold">{name}</p>
           {isGroupChat && (
             <p className="w-full text-xs text-gray-500 overflow-ellipsis overflow-hidden whitespace-nowrap">
-              {members.map((m) => m.name).join(', ')}
+              {typingUsers.length
+                ? `${typingUsers[0].name} is typing`
+                : members.map((m) => m.name).join(', ')}
             </p>
           )}
         </div>
